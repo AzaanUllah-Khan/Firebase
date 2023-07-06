@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <style>
+        #azaan::after {
+            content: "|";
+            animation: blink-caret 0.5s infinite;
+        }
+
+        @keyframes blink-caret {
+            50% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="azaan" style="display: none;"></h1>
+    <h1 id="db" style="display: none;">Email Verification has been sent</h1>
+    <button id="log">Logout</button>
+    <script>
+        const text = document.getElementById('azaan');
+        const words = ['This', 'is', 'main', 'page'];
+        let currentWordIndex = 0;
+        let currentCharIndex = 0;
+        let isDeleting = false;
+
+        const typeNextChar = () => {
+            const currentWord = words[currentWordIndex];
+
+            if (isDeleting) {
+                text.textContent = currentWord.substring(0, currentCharIndex - 1);
+                currentCharIndex--;
+            } else {
+                text.textContent = currentWord.substring(0, currentCharIndex + 1);
+                currentCharIndex++;
+            }
+
+            if (!isDeleting && currentCharIndex === currentWord.length) {
+                isDeleting = true;
+                setTimeout(typeNextChar, 1500);
+            } else if (isDeleting && currentCharIndex === 0) {
+                isDeleting = false;
+                currentWordIndex = (currentWordIndex + 1) % words.length;
+                setTimeout(typeNextChar, 500);
+            } else {
+                setTimeout(typeNextChar, 100);
+            }
+        };
+
+        typeNextChar();
+    </script>
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
