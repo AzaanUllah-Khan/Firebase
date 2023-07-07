@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signInWithPopup, updatePassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
 const firebaseConfig = {
@@ -26,12 +26,27 @@ btn.addEventListener("click", () => {
         .then((userCredential) => {
             // Signed in 
             const user = userCredential.user;
-            window.location.href = './main.html'
+            Swal.fire({
+                icon: 'success',
+                title: 'Signed In',
+                text: 'Email Signed In successfully',
+                // footer: '<a href="">Why do I have this issue?</a>'
+            })
+            setTimeout(() => {
+                window.location.href = './main.html'
+
+            }, 2000)
             // ...
         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops',
+                text: 'Something went wrong',
+                footer: '<a href="./index.html">Dont Have an Account ? Create one</a>'
+            })
             // ..
         });
 })
@@ -64,4 +79,29 @@ googlebtn.addEventListener("click", () => {
             // ...
         });
 
+})
+var fP = document.getElementById('forgotPass')
+fP.addEventListener('click', () => {
+    const auth = getAuth(app);
+
+    const user = auth.currentUser;
+    const newPassword = 'youaresodumb';
+
+    updatePassword(user, newPassword).then(() => {
+        // Update successful.
+        console.log(user);
+        console.log(newPassword);
+        Swal.fire({
+            icon: 'success',
+            title: 'Password Updated Successfully',
+            text: `Your new password is ${newPassword}`,
+        })
+    }).catch((error) => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops',
+            text: `${error}`,
+        })
+        // ...
+    });
 })
